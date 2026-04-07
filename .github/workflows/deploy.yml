@@ -10,24 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Récupérer le code du dépôt
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      # 2️⃣ Préparer la clé SSH
       - name: Prepare SSH key
         run: |
           mkdir -p ~/.ssh
-          printf '%s' "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' | perl -pe 's/\\n/\n/g' > ~/.ssh/deploy_key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
+      # 3️⃣ Ajouter le serveur à known_hosts pour éviter l'alerte de fingerprint
       - name: Add server to known_hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -p "${{ secrets.SSH_PORT }}" -H "${{ secrets.SERVER_IP }}" >> ~/.ssh/known_hosts
 
+      # 4️⃣ Déployer sur le serveur
       - name: Deploy to server
         run: |
           ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}" << 'EOF'
-            cd /home/${{ secrets.SSH_USER }}/git/Portfolio
-            git pull origin main
-            docker compose up -d --build
-          EOF
+cd /home/${{ secrets.SSH_USER }}/git/Portfolio
+git pull origin main
+docker compose up -d --build
+EOF
