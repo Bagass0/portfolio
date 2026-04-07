@@ -30,4 +30,4 @@ jobs:
             cd /home/${{ secrets.SSH_USER }}/git/Portfolio
             git pull origin main
             docker compose up -d --build
-          EOF 
+          EOF
