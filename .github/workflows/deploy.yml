@@ -10,19 +10,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Récupérer le code du dépôt
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      # 2️⃣ Préparer la clé SSH (corrige les retours ligne Windows)
       - name: Prepare SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
+      # 3️⃣ Ajouter le serveur à known_hosts
       - name: Add server to known_hosts
         run: |
           ssh-keyscan -p "${{ secrets.SSH_PORT }}" -H "${{ secrets.SERVER_IP }}" >> ~/.ssh/known_hosts
 
+      # 4️⃣ Déployer sur le serveur
       - name: Deploy to server
         run: |
           ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}" << 'EOF'
