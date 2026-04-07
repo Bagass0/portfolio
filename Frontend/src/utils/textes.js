@@ -287,7 +287,6 @@ export const ProjectsTextes = {
         link: "#",
         image: "/images/projets/mygreenchoice.png",
         more: "Voir le projet",
-        site: "https://fantikspace.fr/",
         tag: "Scolaire"
       },
       {
@@ -338,7 +337,6 @@ export const ProjectsTextes = {
         link: "#",
         image: "/images/projets/mygreenchoice.png",
         more: "See the project",
-        site: "https://fantikspace.fr/",
         tag: "School"
       }, +
       {
