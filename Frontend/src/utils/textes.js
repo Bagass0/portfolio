@@ -338,7 +338,7 @@ export const ProjectsTextes = {
         image: "/images/projets/mygreenchoice.png",
         more: "See the project",
         tag: "School"
-      }, +
+      },
       {
         title: "Airneis",
         date: "March 15, 2024",
