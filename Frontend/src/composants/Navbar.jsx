@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ConfigContext } from '../context/ConfigContext';
 import { NavbarTextes } from '../utils/textes';
 import '../styles/Navbar.css';
@@ -31,11 +32,18 @@ const Navbar = () => {
             to={option.path}
             className={location.pathname === option.path ? 'active' : ''}
             onClick={() => setOpen(false)}
+            style={{ position: 'relative' }}
           >
             {option.label}
+            {location.pathname === option.path && (
+              <motion.span
+                className="nav-indicator"
+                layoutId="nav-indicator"
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+              />
+            )}
           </Link>
         ))}
-
       </div>
       <div className="navbar-lang">
         <button className={lang === 'fr' ? 'active' : ''} onClick={() => setLang('fr')}>FR</button>

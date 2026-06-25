@@ -51,13 +51,33 @@ const Home = () => {
       : null
   }));
 
+  const heroContainer = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.18, delayChildren: 0.1 } },
+  };
+
+  const heroItem = {
+    hidden: { opacity: 0, y: 28 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+  };
+
   return (
     <>
       <header className="home-header">
-        <div className="header-content">
-          <img src="/banniere-header.png" alt="Logo" className="header-banniere" />
-          <h1 className="header-title">
-            <span style={{ color: '#4fc3f7', fontWeight: 700, fontFamily: 'Comic Sans MS' }}>
+        <motion.div
+          className="header-content"
+          variants={heroContainer}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.img
+            variants={heroItem}
+            src="/banniere-header.png"
+            alt="Logo"
+            className="header-banniere"
+          />
+          <motion.h1 variants={heroItem} className="header-title">
+            <span style={{ color: '#4fc3f7', fontWeight: 700 }}>
               <Typewriter
                 words={textes.roles}
                 loop={0}
@@ -68,8 +88,8 @@ const Home = () => {
                 delaySpeed={1200}
               />
             </span>
-          </h1>
-          <div className="header-socials">
+          </motion.h1>
+          <motion.div variants={heroItem} className="header-socials">
             <a
               href="https://github.com/Bagass0"
               target="_blank"
@@ -86,8 +106,8 @@ const Home = () => {
             >
               <FontAwesomeIcon icon={faLinkedin} />
             </a>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
         <div className="header-bg"></div>
       </header>
       <section className="timeline-section">

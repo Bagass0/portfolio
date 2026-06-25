@@ -55,7 +55,6 @@ button:hover {
   background: var(--dark-bg2);
   color: var(--secondary-blue);
 }
-button:focus,
 button:focus-visible {
   outline: 3px solid var(--primary-blue);
 }

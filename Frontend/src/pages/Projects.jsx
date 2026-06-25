@@ -1,5 +1,6 @@
 import "../styles/Projects.css";
 import { useState, useContext } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ConfigContext } from "../context/ConfigContext";
 import { ProjectsTextes } from "../utils/textes";
 
@@ -70,61 +71,82 @@ const Projects = () => {
           ))}
         </div>
       </div>
-      <div className="projects-list">
-        {filteredProjects.length === 0 && (
-          <div className="no-project">{lang === "fr" ? "Aucun projet ne correspond à ce filtre." : "No project matches this filter."}</div>
-        )}
-        {filteredProjects.map(proj => (
-          <div className="project-card" key={proj.title}>
-            <div className="project-banner">
-              <img
-                src={proj.image ? proj.image : "/images/projects/default.png"}
-                alt={`Aperçu de ${proj.title}`}
-                className="project-preview-banner"
-              />
-              {proj.tag && (
-                <span className={`project-type-tag project-type-${proj.tag.toLowerCase()}`}>
-                  {proj.tag}
-                </span>
-              )}
-            </div>
-            <h3>{proj.title}</h3>
-            <p>
-              {proj.description}
-            </p>
-            <div className="project-techs">
-              {proj.techs.slice(0, 4).map(t => {
-                const tech = techs.find(tech => tech.name === t);
-                const category = tech ? tech.category : "";
-                return (
-                  <span
-                    className={`project-tech project-tech-${category}`}
-                    key={t}
-                  >
-                    {t}
+      <AnimatePresence mode="wait">
+        <motion.div
+          className="projects-list"
+          key={selected.join(',')}
+          initial="hidden"
+          animate="visible"
+          exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          variants={{ visible: { transition: { staggerChildren: 0.07 } } }}
+        >
+          {filteredProjects.length === 0 && (
+            <motion.div
+              className="no-project"
+              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+            >
+              {lang === "fr" ? "Aucun projet ne correspond à ce filtre." : "No project matches this filter."}
+            </motion.div>
+          )}
+          {filteredProjects.map(proj => (
+            <motion.div
+              className="project-card"
+              key={proj.title}
+              variants={{
+                hidden: { opacity: 0, y: 24, scale: 0.97 },
+                visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
+              }}
+            >
+              <div className="project-banner">
+                <img
+                  src={proj.image ? proj.image : "/images/projects/default.png"}
+                  alt={`Aperçu de ${proj.title}`}
+                  className="project-preview-banner"
+                />
+                {proj.tag && (
+                  <span className={`project-type-tag project-type-${proj.tag.toLowerCase()}`}>
+                    {proj.tag}
                   </span>
-                );
-              })}
-              {proj.techs.length > 4 && (
-                <span className="project-tech project-tech-more">
-                  +{proj.techs.length - 4}
-                </span>
+                )}
+              </div>
+              <h3>{proj.title}</h3>
+              <p>
+                {proj.description}
+              </p>
+              <div className="project-techs">
+                {proj.techs.slice(0, 4).map(t => {
+                  const tech = techs.find(tech => tech.name === t);
+                  const category = tech ? tech.category : "";
+                  return (
+                    <span
+                      className={`project-tech project-tech-${category}`}
+                      key={t}
+                    >
+                      {t}
+                    </span>
+                  );
+                })}
+                {proj.techs.length > 4 && (
+                  <span className="project-tech project-tech-more">
+                    +{proj.techs.length - 4}
+                  </span>
+                )}
+              </div>
+              {proj.site && (
+                <a
+                  href={proj.site}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="project-site-btn"
+                >
+                  <svg width="18" height="18" fill="none" viewBox="0 0 20 20"><path fill="currentColor" d="M7.293 14.707a1 1 0 0 1 0-1.414L12.586 8H9a1 1 0 1 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V9.414l-5.293 5.293a1 1 0 0 1-1.414 0z" /></svg>
+                  {proj.more}
+                </a>
               )}
-            </div>
-            {proj.site && (
-              <a
-                href={proj.site}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="project-site-btn"
-              >
-                <svg width="18" height="18" fill="none" viewBox="0 0 20 20"><path fill="currentColor" d="M7.293 14.707a1 1 0 0 1 0-1.414L12.586 8H9a1 1 0 1 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V9.414l-5.293 5.293a1 1 0 0 1-1.414 0z" /></svg>
-                {proj.more}
-              </a>
-            )}
-          </div>
-        ))}
-      </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };
