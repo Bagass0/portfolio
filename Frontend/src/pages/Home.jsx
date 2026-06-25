@@ -1,5 +1,6 @@
 import '../styles/Home.css';
 import { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { ConfigContext } from '../context/ConfigContext';
 import { HomeTextes } from '../utils/textes';
 import { Typewriter } from 'react-simple-typewriter';
@@ -12,7 +13,8 @@ import {
   faGraduationCap,
   faUniversity,
   faChalkboardUser,
-  faSchool
+  faSchool,
+  faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { motion } from "framer-motion";
 
@@ -26,11 +28,20 @@ const iconMap = {
   faSchool
 };
 
+const heroContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.18, delayChildren: 0.1 } },
+};
+
+const heroItem = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+};
+
 const Home = () => {
   const { lang } = useContext(ConfigContext);
   const textes = HomeTextes[lang];
 
-  // Ajoute dynamiquement les icônes aux expériences et formations
   const experiences = textes.experiences.map(exp => ({
     ...exp,
     logo: typeof exp.logo === "string" ? iconMap[exp.logo] : exp.logo,
@@ -50,16 +61,6 @@ const Home = () => {
         : `/images/ecoles/${edu.schoolImg.replace(/^(\.\.\/)?images\/ecoles\//, "")}`
       : null
   }));
-
-  const heroContainer = {
-    hidden: {},
-    visible: { transition: { staggerChildren: 0.18, delayChildren: 0.1 } },
-  };
-
-  const heroItem = {
-    hidden: { opacity: 0, y: 28 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
-  };
 
   return (
     <>
@@ -89,38 +90,70 @@ const Home = () => {
               />
             </span>
           </motion.h1>
-          <motion.div variants={heroItem} className="header-socials">
-            <a
-              href="https://github.com/Bagass0"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-            >
-              <FontAwesomeIcon icon={faGithub} />
-            </a>
-            <a
-              href="https://linkedin.com/in/hugo-barbosa-pereira"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-            >
-              <FontAwesomeIcon icon={faLinkedin} />
-            </a>
+          <motion.p variants={heroItem} className="header-subtitle">
+            {textes.subtitle}
+          </motion.p>
+          <motion.div variants={heroItem} className="header-actions">
+            <Link to="/projects" className="header-cta">
+              {textes.cta}
+              <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+                <path fill="currentColor" d="M7.293 14.707a1 1 0 0 1 0-1.414L12.586 8H9a1 1 0 1 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V9.414l-5.293 5.293a1 1 0 0 1-1.414 0z" />
+              </svg>
+            </Link>
+            <div className="header-socials">
+              <a href="https://github.com/Bagass0" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <FontAwesomeIcon icon={faGithub} />
+              </a>
+              <a href="https://linkedin.com/in/hugo-barbosa-pereira" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <FontAwesomeIcon icon={faLinkedin} />
+              </a>
+            </div>
           </motion.div>
         </motion.div>
+
+        <motion.div
+          className="scroll-indicator"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4, duration: 0.6 }}
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+          >
+            <FontAwesomeIcon icon={faChevronDown} />
+          </motion.div>
+        </motion.div>
+
         <div className="header-bg"></div>
       </header>
+
       <section className="timeline-section">
-        <h2 className="timeline-title">{textes.experiencesTitle}</h2>
+        <motion.h2
+          className="timeline-title"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          {textes.experiencesTitle}
+        </motion.h2>
         <div className="timeline">
+          <motion.div
+            className="timeline-line"
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, amount: 0.05 }}
+            transition={{ duration: 1.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+          />
           {experiences.map((exp, idx) => (
             <motion.div
               className={`timeline-item ${exp.type}`}
               key={idx}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.18 }}
-              transition={{ duration: 0.6, ease: [0.4, 2, 0.6, 1] }}
+              transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94], delay: idx * 0.08 }}
             >
               <div className="timeline-icon">
                 <FontAwesomeIcon icon={exp.logo} />
@@ -128,11 +161,7 @@ const Home = () => {
               <div className="timeline-content">
                 <div className="timeline-header">
                   {exp.companyImg && (
-                    <img
-                      src={exp.companyImg}
-                      alt={exp.company}
-                      className="timeline-company-img"
-                    />
+                    <img src={exp.companyImg} alt={exp.company} className="timeline-company-img" />
                   )}
                   <div>
                     <h3>{exp.title}</h3>
@@ -150,17 +179,33 @@ const Home = () => {
           ))}
         </div>
       </section>
+
       <section className="timeline-section">
-        <h2 className="timeline-title">{textes.educationsTitle}</h2>
+        <motion.h2
+          className="timeline-title"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          {textes.educationsTitle}
+        </motion.h2>
         <div className="timeline">
+          <motion.div
+            className="timeline-line"
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, amount: 0.05 }}
+            transition={{ duration: 1.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+          />
           {educations.map((edu, idx) => (
             <motion.div
               className={`timeline-item ${edu.type}`}
               key={idx}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.18 }}
-              transition={{ duration: 0.6, ease: [0.4, 2, 0.6, 1] }}
+              transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94], delay: idx * 0.08 }}
             >
               <div className="timeline-icon">
                 <FontAwesomeIcon icon={edu.logo} />
@@ -168,11 +213,7 @@ const Home = () => {
               <div className="timeline-content">
                 <div className="timeline-header">
                   {edu.schoolImg && (
-                    <img
-                      src={edu.schoolImg}
-                      alt={edu.school}
-                      className="timeline-company-img"
-                    />
+                    <img src={edu.schoolImg} alt={edu.school} className="timeline-company-img" />
                   )}
                   <div>
                     <h3>{edu.title}</h3>

@@ -43,8 +43,10 @@ export const HomeTextes = {
       "Développeur Mobile",
       "Développeur Web",
     ],
+    subtitle: "Passionné par le développement web & mobile, je conçois des applications modernes — du design au déploiement.",
+    cta: "Voir mes projets",
     experiencesTitle: "Expériences Professionnelles",
-    educationsTitle: "Parcours Scolaire",
+    educationsTitle: "Formation",
     experiences: [
       {
         type: "pro",
@@ -154,6 +156,8 @@ export const HomeTextes = {
       "Mobile Developer",
       "Web Developer",
     ],
+    subtitle: "Passionate about web & mobile development, I build modern applications — from design to deployment.",
+    cta: "See my projects",
     experiencesTitle: "Professional Experiences",
     educationsTitle: "Education",
     experiences: [

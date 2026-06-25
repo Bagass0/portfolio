@@ -11,20 +11,50 @@ const listItemVariants = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.45, ease: 'easeOut' } },
 };
 
+const statVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.12, ease: [0.25, 0.46, 0.45, 0.94] },
+  }),
+};
+
+const stats = [
+  { value: '5+', label: 'ans d\'expérience' },
+  { value: '4',  label: 'projets réalisés' },
+  { value: '15+', label: 'technologies' },
+];
+
 const About = () => {
   return (
-    <div className="projects-page">
+    <div className="about-page">
+      <motion.div
+        className="about-stats"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
+        {stats.map((s, i) => (
+          <motion.div key={s.label} className="about-stat-card" custom={i} variants={statVariants}>
+            <span className="stat-value">{s.value}</span>
+            <span className="stat-label">{s.label}</span>
+          </motion.div>
+        ))}
+      </motion.div>
+
       <motion.div
         className="about-hosting-section"
         initial={{ opacity: 0, y: 32 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <h2>À propos de ce portfolio</h2>
         <p>
           Ce portfolio est un projet personnel hébergé sur un <b>serveur Ubuntu</b> (Raspberry Pi) afin d&apos;apprendre et expérimenter :
         </p>
-        <motion.ul variants={listVariants} initial="hidden" animate="visible">
+        <motion.ul variants={listVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           <motion.li variants={listItemVariants}>Flash et configuration d&apos;un <b>Ubuntu Server</b> sur Raspberry Pi</motion.li>
           <motion.li variants={listItemVariants}>Mise en place de la <b>sécurité</b> (firewall, SSH, Jails...)</motion.li>
           <motion.li variants={listItemVariants}>Création d&apos;un pipeline <b>CI/CD</b> pour déploiement automatique</motion.li>
