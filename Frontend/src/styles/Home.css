@@ -32,6 +32,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
+}
+
+/* Couche parallax individuelle — ne casse pas le centrage */
+.parallax-layer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .header-banniere {
@@ -102,25 +111,51 @@
 }
 
 .header-cta {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 28px;
-  border-radius: 12px;
-  background: linear-gradient(120deg, #4fc3f7, #2196f3);
-  color: #0d1a27;
+  padding: 13px 32px;
+  border-radius: 10px;
+  border: 2px solid #4fc3f7;
+  background: transparent;
+  color: #4fc3f7;
   font-size: 1rem;
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 6px 24px rgba(79, 195, 247, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  letter-spacing: 0.4px;
+  text-shadow: 0 0 10px rgba(79, 195, 247, 0.6);
+  box-shadow:
+    0 0 14px rgba(79, 195, 247, 0.25),
+    inset 0 0 14px rgba(79, 195, 247, 0.04);
+  transition: color 0.32s ease, text-shadow 0.32s ease, box-shadow 0.32s ease;
+  z-index: 1;
+}
+
+/* Fond bleu qui glisse de gauche à droite au hover */
+.header-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, #4fc3f7, #2196f3);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.36s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.header-cta:hover::before {
+  transform: scaleX(1);
 }
 
 .header-cta:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(120deg, #5dd0ff, #42a5f5);
-  box-shadow: 0 10px 32px rgba(79, 195, 247, 0.5);
-  color: #0d1a27;
+  color: #071e2e;
+  text-shadow: none;
+  box-shadow:
+    0 0 18px rgba(79, 195, 247, 0.65),
+    0 0 45px rgba(79, 195, 247, 0.3),
+    0 0 80px rgba(79, 195, 247, 0.12);
 }
 
 .header-socials {

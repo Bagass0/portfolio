@@ -7,28 +7,24 @@ import { Typewriter } from 'react-simple-typewriter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import {
-  faLaptopCode,
-  faCode,
-  faCodeBranch,
-  faGraduationCap,
-  faUniversity,
-  faChalkboardUser,
-  faSchool,
+  faLaptopCode, faCode, faCodeBranch,
+  faGraduationCap, faUniversity, faChalkboardUser, faSchool,
   faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const iconMap = {
   faLaptopCode, faCode, faCodeBranch,
-  faGraduationCap, faUniversity, faChalkboardUser, faSchool
+  faGraduationCap, faUniversity, faChalkboardUser, faSchool,
 };
 
 const heroContainer = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.18, delayChildren: 0.1 } },
 };
+
 const heroItem = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 24 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
 };
 
@@ -42,18 +38,25 @@ const Home = () => {
     offset: ['start start', 'end start'],
   });
 
-  // Contenu : zoom arrière + monte + blur + fade
-  const contentScale   = useTransform(scrollYProgress, [0, 0.8],  [1, 0.72]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
-  const contentY       = useTransform(scrollYProgress, [0, 0.65], [0, -90]);
-  const blurRaw        = useTransform(scrollYProgress, [0, 0.65], [0, 14]);
-  const contentFilter  = useTransform(blurRaw, v => `blur(${v}px)`);
+  /* ── Fondu global + scale + blur ── */
+  const globalOpacity = useTransform(scrollYProgress, [0, 0.7],  [1, 0]);
+  const globalScale   = useTransform(scrollYProgress, [0, 0.85], [1, 0.72]);
+  const blurRaw       = useTransform(scrollYProgress, [0, 0.7],  [0, 14]);
+  const globalFilter  = useTransform(blurRaw, v => `blur(${v}px)`);
 
-  // Fond : zoom avant lent (parallax)
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.3]);
+  /* ── Parallax par couche — s'additionne à l'animation d'entrée ── */
+  const bannerY      = useTransform(scrollYProgress, [0, 0.8], [0, -60]);
+  const bannerScale  = useTransform(scrollYProgress, [0, 0.8], [1, 0.82]);
+  const bannerRotate = useTransform(scrollYProgress, [0, 0.75], [0, -7]);
+  const titleY       = useTransform(scrollYProgress, [0, 0.8], [0, -20]);
+  const subtitleY    = useTransform(scrollYProgress, [0, 0.8], [0, 16]);
+  const ctaY         = useTransform(scrollYProgress, [0, 0.8], [0, 40]);
 
-  // Chevron : disparaît vite
-  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  /* ── Fond : zoom avant ── */
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.35]);
+
+  /* ── Chevron ── */
+  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.14], [1, 0]);
 
   const experiences = textes.experiences.map(exp => ({
     ...exp,
@@ -75,47 +78,57 @@ const Home = () => {
     <>
       <header className="home-header" ref={heroRef}>
 
-        {/* Fond parallax */}
         <motion.div className="header-bg" style={{ scale: bgScale }} />
 
-        {/* Contenu — zoom + blur + fade au scroll */}
         <motion.div
           className="hero-scroll-wrapper"
-          style={{
-            opacity: contentOpacity,
-            y: contentY,
-            scale: contentScale,
-            filter: contentFilter,
-          }}
+          style={{ opacity: globalOpacity, scale: globalScale, filter: globalFilter }}
         >
           <motion.div className="header-content" variants={heroContainer} initial="hidden" animate="visible">
-            <motion.img variants={heroItem} src="/banniere-header.png" alt="Logo" className="header-banniere" />
-            <motion.h1 variants={heroItem} className="header-title">
-              <span style={{ color: '#4fc3f7', fontWeight: 700 }}>
-                <Typewriter words={textes.roles} loop={0} cursor cursorStyle="|" typeSpeed={80} deleteSpeed={50} delaySpeed={1200} />
-              </span>
-            </motion.h1>
-            <motion.p variants={heroItem} className="header-subtitle">{textes.subtitle}</motion.p>
-            <motion.div variants={heroItem} className="header-actions">
-              <Link to="/projects" className="header-cta">
-                {textes.cta}
-                <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
-                  <path fill="currentColor" d="M7.293 14.707a1 1 0 0 1 0-1.414L12.586 8H9a1 1 0 1 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V9.414l-5.293 5.293a1 1 0 0 1-1.414 0z" />
-                </svg>
-              </Link>
-              <div className="header-socials">
-                <a href="https://github.com/Bagass0" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                  <FontAwesomeIcon icon={faGithub} />
-                </a>
-                <a href="https://linkedin.com/in/hugo-barbosa-pereira" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                  <FontAwesomeIcon icon={faLinkedin} />
-                </a>
+
+            {/* Logo — variants + scroll sur le même élément (y s'additionne) */}
+            <motion.div
+              variants={heroItem}
+              className="parallax-layer"
+              style={{ y: bannerY, scale: bannerScale, rotate: bannerRotate }}
+            >
+              <img src="/banniere-header.png" alt="Logo" className="header-banniere" />
+            </motion.div>
+
+            <motion.div variants={heroItem} className="parallax-layer" style={{ y: titleY }}>
+              <h1 className="header-title">
+                <span style={{ color: '#4fc3f7', fontWeight: 700 }}>
+                  <Typewriter words={textes.roles} loop={0} cursor cursorStyle="|" typeSpeed={80} deleteSpeed={50} delaySpeed={1200} />
+                </span>
+              </h1>
+            </motion.div>
+
+            <motion.div variants={heroItem} className="parallax-layer" style={{ y: subtitleY }}>
+              <p className="header-subtitle">{textes.subtitle}</p>
+            </motion.div>
+
+            <motion.div variants={heroItem} className="parallax-layer" style={{ y: ctaY }}>
+              <div className="header-actions">
+                <Link to="/projects" className="header-cta">
+                  {textes.cta}
+                  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+                    <path fill="currentColor" d="M7.293 14.707a1 1 0 0 1 0-1.414L12.586 8H9a1 1 0 1 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V9.414l-5.293 5.293a1 1 0 0 1-1.414 0z" />
+                  </svg>
+                </Link>
+                <div className="header-socials">
+                  <a href="https://github.com/Bagass0" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                    <FontAwesomeIcon icon={faGithub} />
+                  </a>
+                  <a href="https://linkedin.com/in/hugo-barbosa-pereira" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <FontAwesomeIcon icon={faLinkedin} />
+                  </a>
+                </div>
               </div>
             </motion.div>
+
           </motion.div>
         </motion.div>
 
-        {/* Chevron */}
         <motion.div style={{ opacity: indicatorOpacity }}>
           <motion.div className="scroll-indicator" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4, duration: 0.6 }}>
             <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}>
@@ -126,7 +139,6 @@ const Home = () => {
 
       </header>
 
-      {/* Carte qui glisse par-dessus le hero */}
       <div className="sections-card">
         <section className="timeline-section">
           <motion.h2 className="timeline-title" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
@@ -135,14 +147,10 @@ const Home = () => {
           <div className="timeline">
             <motion.div className="timeline-line" initial={{ scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true, amount: 0.05 }} transition={{ duration: 1.4, ease: [0.25, 0.46, 0.45, 0.94] }} />
             {experiences.map((exp, idx) => (
-              <motion.div
-                className={`timeline-item ${exp.type}`}
-                key={idx}
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
+              <motion.div className={`timeline-item ${exp.type}`} key={idx}
+                initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.18 }}
-                transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94], delay: idx * 0.08 }}
-              >
+                transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94], delay: idx * 0.08 }}>
                 <div className="timeline-icon"><FontAwesomeIcon icon={exp.logo} /></div>
                 <div className="timeline-content">
                   <div className="timeline-header">
@@ -167,14 +175,10 @@ const Home = () => {
           <div className="timeline">
             <motion.div className="timeline-line" initial={{ scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true, amount: 0.05 }} transition={{ duration: 1.4, ease: [0.25, 0.46, 0.45, 0.94] }} />
             {educations.map((edu, idx) => (
-              <motion.div
-                className={`timeline-item ${edu.type}`}
-                key={idx}
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
+              <motion.div className={`timeline-item ${edu.type}`} key={idx}
+                initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.18 }}
-                transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94], delay: idx * 0.08 }}
-              >
+                transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94], delay: idx * 0.08 }}>
                 <div className="timeline-icon"><FontAwesomeIcon icon={edu.logo} /></div>
                 <div className="timeline-content">
                   <div className="timeline-header">

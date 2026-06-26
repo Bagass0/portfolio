@@ -1,5 +1,8 @@
 import '../styles/About.css';
+import { useContext } from 'react';
 import { motion } from 'framer-motion';
+import { ConfigContext } from '../context/ConfigContext';
+import { ProjectsTextes } from '../utils/textes';
 
 const listVariants = {
   hidden: {},
@@ -20,13 +23,16 @@ const statVariants = {
   }),
 };
 
-const stats = [
-  { value: '5+', label: 'ans d\'expérience' },
-  { value: '4',  label: 'projets réalisés' },
-  { value: '15+', label: 'technologies' },
-];
-
 const About = () => {
+  const { lang } = useContext(ConfigContext);
+  const projectCount = ProjectsTextes[lang].projects.length;
+
+  const stats = [
+    { value: '4+', label: lang === 'fr' ? 'ans d\'expérience' : 'years of experience' },
+    { value: projectCount, label: lang === 'fr' ? 'projets réalisés' : 'projects completed' },
+    { value: '15+', label: lang === 'fr' ? 'technologies' : 'technologies' },
+  ];
+
   return (
     <div className="about-page">
       <motion.div
