@@ -139,7 +139,7 @@ const Projects = () => {
                   rel="noopener noreferrer"
                   className="project-site-btn"
                 >
-                  <svg width="18" height="18" fill="none" viewBox="0 0 20 20"><path fill="currentColor" d="M7.293 14.707a1 1 0 0 1 0-1.414L12.586 8H9a1 1 0 1 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V9.414l-5.293 5.293a1 1 0 0 1-1.414 0z" /></svg>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 20 20"><path fill="currentColor" d="M7.293 14.707a1 1 0 0 1 0-1.414L12.586 8H9a1 1 0 1 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V9.414l-5.293 5.293a1 1 0 0 1-1.414 0z" /></svg>
                   {proj.more}
                 </a>
               )}

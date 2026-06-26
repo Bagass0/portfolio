@@ -316,6 +316,17 @@ export const ProjectsTextes = {
         tag: "Professionnel"
       },
       {
+        title: "Smaartcheck",
+        date: "2025",
+        description: "Plateforme de check-in événementiel permettant d'importer des listings de participants, de les scanner manuellement ou par QR code, et de consulter ou télécharger leurs statistiques.",
+        techs: ["ReactJS", "Vite", "React Native", "PHP", "JavaScript"],
+        duration: null,
+        site: "https://smaartcheck.com",
+        image: "/images/projets/smaartcheck.png",
+        more: "Voir le projet",
+        tag: "Professionnel"
+      },
+      {
         title: "Portfolio",
         date: "25 mai 2025",
         description: "Un site portfolio moderne avec animations et internationalisation",
@@ -363,6 +374,17 @@ export const ProjectsTextes = {
         link: "#",
         image: "/images/projets/interaact.jpg",
         more: "Voir le projet",
+        tag: "Professional"
+      },
+      {
+        title: "Smaartcheck",
+        date: "2025",
+        description: "Event check-in platform to import participant listings, scan them manually or by QR code, and view or download their statistics.",
+        techs: ["ReactJS", "Vite", "React Native", "PHP", "JavaScript"],
+        duration: null,
+        site: "https://smaartcheck.com",
+        image: "/images/projets/default.png",
+        more: "See the project",
         tag: "Professional"
       },
       {
